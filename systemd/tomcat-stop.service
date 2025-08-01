@@ -1,0 +1,9 @@
+[Unit]
+Description = Tomcat stop service
+#After =
+#Requires = 
+
+[Service]
+Type = oneshot
+ExecStart = /usr/bin/systemctl stop tomcat
+

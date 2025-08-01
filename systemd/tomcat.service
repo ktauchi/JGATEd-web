@@ -1,0 +1,40 @@
+# Systemd unit file for default tomcat
+# 
+# To create clones of this service:
+# DO NOTHING, use tomcat@.service instead.
+
+[Unit]
+Description=Apache Tomcat Web Application Container
+Documentation=http://tomcat.apache.org/
+
+Requires=network.target
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+Environment=TIBCO_HOME=/opt/tibco
+Environment=TIBCO_RV_HOME=/opt/tibco/tibrv/8.7
+
+LimitNOFILE = 65535
+PIDFile = /var/local/tomcat/catalina.pid
+#Nice=0
+
+#TimeoutStartSec=30
+ExecStart = /var/local/tomcat/bin/catalina.sh start
+ExecStop = /var/local/tomcat/bin/catalina.sh stop
+
+#RemainAfterExit=yes
+
+#ExecStart=/var/local/tomcat/bin/catalina.sh start
+#ExecStop=/var/local/tomcat/bin/catalina.sh stop
+
+User=tomcat
+Group=tomcat
+
+WorkingDirectory=/var/local/tomcat
+
+#Restart=always
+
+[Install]
+WantedBy=multi-user.target

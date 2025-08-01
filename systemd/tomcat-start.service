@@ -1,0 +1,9 @@
+[Unit]
+Description = Tomcat start service
+#After =
+#Requires =
+
+[Service]
+Type = oneshot
+ExecStart = /usr/bin/systemctl start tomcat
+
