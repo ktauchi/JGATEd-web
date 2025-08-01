@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim: set tabstop=4: -->
+
+<project name="My Project" default="compile" basedir=".">
+	<property file="build.properties"/>
+	<property file="${user.home}/build.properties"/>
+	
+	<property name="catalina.home" value="/usr/local/tomcat"/>
+	<property name="catalina.base" value="../../../../" />
+	
+	<property name="app.name" value="jgate"/>
+	<property name="app.version" value="0.1"/>
+	<property name="app.home" value="../../" />
+	
+	<property name="build.home" value="${basedir}/build"/>
+	<property name="src.home" value="${basedir}/src"/>
+	<property name="web.home" value="${basedir}/WebContent"/>
+	
+	<path id="compile.classpath">
+		<fileset dir="${catalina.home}/bin">
+			<include name="*.jar" />
+		</fileset>
+		
+		<pathelement location="${catalina.home}/lib" />
+			<fileset dir="${catalina.home}/lib">
+			<include name="*.jar" />
+		</fileset>
+		
+		<pathelement location="${catalina.base}/lib" />
+			<fileset dir="${catalina.base}/lib">
+			<include name="*.jar" />
+		</fileset>
+		
+		<pathelement location="${app.home}/WEB-INF/lib" />
+		<fileset dir="${app.home}/WEB-INF/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	
+	<property name="compile.debug" value="true" />
+	<property name="compile.deprecation" value="false" />
+	<property name="compile.optimize" value="true" />
+	
+	<target name="all" depends="clean,compile"
+	        description="Clean build and dist directories, then compile"/>
+	
+	<target name="clean"
+	        description="Delete old build and dist directories">
+		<delete dir="${build.home}" />
+	</target>
+	
+	
+	<target name="compile" depends="prepare"
+	        description="Compile Java sources">
+		<mkdir dir="${build.home}/WEB-INF/classes"/>
+		
+		<javac srcdir="${src.home}"
+		       destdir="${build.home}/WEB-INF/classes"
+		       debug="${compile.debug}"
+		       deprecation="${compile.deprecation}"
+		       optimize="${compile.optimize}"
+		       encoding="utf8"
+		       includeantruntime="false">
+			<compilerarg value="-Xlint:unchecked" />
+			<compilerarg value="-Xlint:deprecation" />
+			<compilerarg value="-proc:none" />
+			<classpath refid="compile.classpath"/>
+		</javac>
+		
+		<copy todir="${build.home}/WEB-INF/classes">
+			<fileset dir="${src.home}">
+				<exclude name="**/*.java" />
+				<exclude name="**/*.properties" />
+			</fileset>
+		</copy>
+		
+		<!-- -->
+		<native2ascii encoding="UTF-8" src="${src.home}" dest="${build.home}/WEB-INF/classes">
+			<include name="**/*.properties" />
+		</native2ascii>
+		
+		<copy todir="${build.home}/WEB-INF">
+			<fileset dir="${web.home}/WEB-INF">
+				<include name="*.xml" />
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+		<!--
+		<copy todir="${build.home}/WEB-INF/classes/META-INF">
+			<fileset dir="${web.home}/META-INF">
+				<include name="*.xml" />
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+		-->
+	</target>
+	
+	<target name="install" depends="compile"
+	description="Install application to servlet container">
+		<copy todir="${app.home}">
+			<fileset dir="${build.home}">
+			<exclude name="**/web.xml" />
+			<exclude name="**/log4j2.xml" />
+			<exclude name="**/applicationContext.xml" />
+			<exclude name="**/spring-servlet.xml" />
+			
+			<include name="**/*.htm" />
+			<include name="**/*.css" />
+			<include name="**/*.js" />
+			<include name="**/*.png" />
+			<include name="**/*.gif" />
+			<include name="**/*.class" />
+			<include name="**/*.properties" />
+			<include name="**/*.xml" />
+			
+			</fileset>
+		</copy>
+		<echo message="exclude file(s) manual copy" />
+		<echo message="cp ./build/WEB-INF/web.xml ../" />
+		<echo message="cp ./build/WEB-INF/classes/log4j2.xml ../classes/" />
+		<echo message="cp ./build/WEB-INF/applicationContext.xml ../" />
+		<echo message="cp ./build/WEB-INF/spring-servlet.xml ../" />
+		<!-- <echo message="cp -r ./build/WEB-INF/classes/META-INF ../classes/" /> -->
+	</target>
+	
+	<target name="prepare">
+		<mkdir dir="${build.home}" />
+		<mkdir dir="${build.home}/WEB-INF" />
+		<mkdir dir="${build.home}/WEB-INF/classes" />
+		<mkdir dir="${build.home}/WEB-INF/classes/META-INF" />
+		
+		<copy todir="${build.home}">
+			<fileset dir="${web.home}"/>
+		</copy>
+	</target>
+	
+	<target name="diff">
+		<fileset id="xml" dir="./build/WEB-INF" includes="**/*.xml">
+			<different targetdir="../" />
+		</fileset>
+		<echo message="${toString:xml}" />
+	</target>
+</project>
+

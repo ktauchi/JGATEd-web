@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="local.minkabu.jgate.mapper.JGATEMapper">
+	<insert id="underlyingBasic" parameterType="map">
+		INSERT INTO `underlying_basic`(`tm`
+			, `commodity`
+			, `linked_commodity`
+			, `state_number`
+			, `dec_in_price`
+			, `com_id`
+			, `isin_code`
+			, `name`
+			, `base_cur`
+			, `deliverable`
+			, `underlying_type`
+			, `price_unit`
+			, `underlying_status`
+			, `underlying_issuer`
+			, `sector_code`
+			, `virtual`
+			, `country_id`
+			, `ext_provider`
+			, `external_id`
+			, `cur_unit`
+			, `db_operation`
+		) VALUES(from_unixtime(#{msec, javaType=string} / 1000)
+			, #{commodity, javaType=string}
+			, #{linked_commodity, javaType=string}
+			, #{state_number, javaType=string}
+			, #{dec_in_price, javaType=string}
+			, #{com_id, javaType=string}
+			, #{isin_code, javaType=string}
+			, #{name, javaType=string}
+			, #{base_cur, javaType=string}
+			, #{deliverable, javaType=string}
+			, #{underlying_type, javaType=string}
+			, #{price_unit, javaType=string}
+			, #{underlying_status, javaType=string}
+			, #{underlying_issuer, javaType=string}
+			, #{sector_code, javaType=string}
+			, #{virtual, javaType=string}
+			, #{country_id, javaType=string}
+			, #{ext_provider, javaType=string}
+			, #{external_id, javaType=string}
+			, #{cur_unit, javaType=string}
+			, #{db_operation, javaType=string}
+		) ON DUPLICATE KEY UPDATE `tm` = from_unixtime(#{msec, javaType=string} / 1000)
+			, `linked_commodity` = #{linked_commodity, javaType=string}
+			, `state_number` = #{state_number, javaType=string}
+			, `dec_in_price` = #{dec_in_price, javaType=string}
+			, `com_id` = #{com_id, javaType=string}
+			, `isin_code` = #{isin_code, javaType=string}
+			, `name` = #{name, javaType=string}
+			, `base_cur` = #{base_cur, javaType=string}
+			, `deliverable` = #{deliverable, javaType=string}
+			, `underlying_type` = #{underlying_type, javaType=string}
+			, `price_unit` = #{price_unit, javaType=string}
+			, `underlying_status` = #{underlying_status, javaType=string}
+			, `underlying_issuer` = #{underlying_issuer, javaType=string}
+			, `sector_code` = #{sector_code, javaType=string}
+			, `virtual` = #{virtual, javaType=string}
+			, `country_id` = #{country_id, javaType=string}
+			, `ext_provider` = #{ext_provider, javaType=string}
+			, `external_id` = #{external_id, javaType=string}
+			, `cur_unit` = #{cur_unit, javaType=string}
+			, `db_operation` =  #{db_operation, javaType=string}
+	</insert>
+	
+	<insert id="instClassBasic" parameterType="map">
+		INSERT INTO `inst_class_basic`(`tm`
+			, `country`
+			, `market`
+			, `instrument`
+			, `modifier`
+			, `commodity`
+			, `expiration`
+			, `strike`
+			
+			, `upper_level_country`
+			, `upper_level_market`
+			, `upper_level_instrument`
+			, `upper_level_modifier`
+			, `upper_level_commodity`
+			, `upper_level_expiration`
+			, `upper_level_strike`
+			
+			, `price_quot_factor`
+			, `contract_size`
+			, `redemption_value`
+			, `undisclosed_min_ord_val`
+			, `opt_min_ord_val`
+			, `opt_min_trade_val`
+			, `derivate_level`
+			, `dec_in_strike_price`
+			, `dec_in_contr_size`
+			, `rnt_id`
+			, `virt_commodity`
+			, `settlement_days`
+			, `settl_day_unit`
+			, `inc_id`
+			, `name`
+			, `trc_id`
+			, `base_cur`
+			, `traded`
+			, `price_unit_premium`
+			, `price_unit_strike`
+			, `trd_cur_unit`
+			, `db_operation`
+			
+			, `dec_in_premium`
+			
+		) VALUES(from_unixtime(#{msec, javaType=string} / 1000)
+			, #{country, javaType=string}
+			, #{market, javaType=string}
+			, #{instrument, javaType=string}
+			, #{modifier, javaType=string}
+			, #{commodity, javaType=string}
+			, #{expiration, javaType=string}
+			, #{strike, javaType=string}
+			
+			, #{upper_level_series_country, javaType=string}
+			, #{upper_level_series_market, javaType=string}
+			, #{upper_level_series_instrument_group, javaType=string}
+			, #{upper_level_series_modifier, javaType=string}
+			, #{upper_level_series_commodity, javaType=string}
+			, #{upper_level_series_expiration_date, javaType=string}
+			, #{upper_level_series_strike_price, javaType=string}
+			
+			, #{price_quot_factor, javaType=string}
+			, #{contract_size, javaType=string}
+			, #{redemption_value, javaType=string}
+			, #{undisclosed_min_ord_val, javaType=string}
+			, #{opt_min_ord_val, javaType=string}
+			, #{opt_min_trade_val, javaType=string}
+			, #{derivate_level, javaType=string}
+			, #{dec_in_strike_price, javaType=string}
+			, #{dec_in_contr_size, javaType=string}
+			, #{rnt_id, javaType=string}
+			, #{virt_commodity, javaType=string}
+			, #{settlement_days, javaType=string}
+			, #{settl_day_unit, javaType=string}
+			, #{inc_id, javaType=string}
+			, #{name, javaType=string}
+			, #{trc_id, javaType=string}
+			, #{base_cur, javaType=string}
+			, #{traded, javaType=string}
+			, #{price_unit_premium, javaType=string}
+			, #{price_unit_strike, javaType=string}
+			, #{trd_cur_unit, javaType=string}
+			, #{db_operation, javaType=string}
+			
+			, #{dec_in_premium, javaType=string}
+		) ON DUPLICATE KEY UPDATE `tm` = from_unixtime(#{msec, javaType=string} / 1000)
+			, `price_quot_factor` = #{price_quot_factor, javaType=string}
+			, `contract_size` = #{contract_size, javaType=string}
+			, `redemption_value` = #{redemption_value, javaType=string}
+			, `undisclosed_min_ord_val` = #{undisclosed_min_ord_val, javaType=string}
+			, `opt_min_ord_val` = #{opt_min_ord_val, javaType=string}
+			, `opt_min_trade_val` = #{opt_min_trade_val, javaType=string}
+			, `derivate_level` = #{derivate_level, javaType=string}
+			, `dec_in_strike_price` = #{dec_in_strike_price, javaType=string}
+			, `dec_in_contr_size` = #{dec_in_contr_size, javaType=string}
+			, `rnt_id` = #{rnt_id, javaType=string}
+			, `virt_commodity` = #{virt_commodity, javaType=string}
+			, `settlement_days` = #{settlement_days, javaType=string}
+			, `settl_day_unit` = #{settl_day_unit, javaType=string}
+			, `inc_id` = #{inc_id, javaType=string}
+			, `name` = #{name, javaType=string}
+			, `trc_id` = #{trc_id, javaType=string}
+			, `base_cur` = #{base_cur, javaType=string}
+			, `traded` = #{traded, javaType=string}
+			, `price_unit_premium` = #{price_unit_premium, javaType=string}
+			, `price_unit_strike` = #{price_unit_strike, javaType=string}
+			, `trd_cur_unit` = #{trd_cur_unit, javaType=string}
+			, `db_operation` = #{db_operation, javaType=string}
+			
+			, `dec_in_premium` = #{dec_in_premium, javaType=string}
+	</insert>
+	
+	<insert id="priceTick" parameterType="map">
+		INSERT INTO `price_tick`(`tm`
+			, `country`
+			, `market`
+			, `instrument`
+			, `modifier`
+			, `commodity`
+			, `expiration`
+			, `strike`
+			
+			, `step_size`
+			
+			, `lower_limit`
+			, `upper_limit`
+			, `dec_in_premium`
+			, `is_fractions`
+		) VALUES(from_unixtime(#{msec, javaType=string} / 1000)
+			, #{country, javaType=string}
+			, #{market, javaType=string}
+			, #{instrument, javaType=string}
+			, #{modifier, javaType=string}
+			, #{commodity, javaType=string}
+			, #{expiration, javaType=string}
+			, #{strike, javaType=string}
+			
+			, #{step_size, javaType=string}
+			
+			, #{lower_limit, javaType=string}
+			, #{upper_limit, javaType=string}
+			, #{dec_in_premium, javaType=string}
+			, #{is_fractions, javaType=string}
+		) ON DUPLICATE KEY UPDATE `tm` = from_unixtime(#{msec, javaType=string} / 1000)
+			, `lower_limit` = #{lower_limit, javaType=string}
+			, `upper_limit` = #{upper_limit, javaType=string}
+			, `dec_in_premium` = #{dec_in_premium, javaType=string}
+			, `is_fractions` = #{is_fractions, javaType=string}
+	</insert>
+	
+	<insert id="instSeriesBasic" parameterType="map">
+		INSERT INTO `inst_series_basic`(`tm`
+			, `country`
+			, `market`
+			, `instrument`
+			, `modifier`
+			, `commodity`
+			, `expiration`
+			, `strike`
+			
+			, `step_size_multiple`
+			, `ins_id`
+			, `long_ins_id`
+			, `date_last_trading`
+			, `time_last_trading`
+			, `date_first_trading`
+			, `time_first_trading`
+			, `series_status`
+			, `suspended`
+			, `traded_in_click`
+			, `db_operation`
+			, `trade_reporting_only`
+			, `traded`
+			
+			, `upper_level_country`
+			, `upper_level_market`
+			, `upper_level_instrument`
+			, `upper_level_modifier`
+			, `upper_level_commodity`
+			, `upper_level_expiration`
+			, `upper_level_strike`
+			
+			, `contract_size`
+			, `price_quot_factor`
+			, `state_number`
+			, `ex_coupon`
+			, `isin_code`
+			, `settlement_date`
+			, `first_settlement_date`
+			, `date_notation`
+			, `deliverable`
+			, `effective_exp_date`
+			, `ext_info_source`
+			, `participant_defined`
+			
+			, `orderbook_id`
+			
+		) VALUES(from_unixtime(#{msec, javaType=string} / 1000)
+			, #{country, javaType=string}
+			, #{market, javaType=string}
+			, #{instrument, javaType=string}
+			, #{modifier, javaType=string}
+			, #{commodity, javaType=string}
+			, #{expiration, javaType=string}
+			, #{strike, javaType=string}
+			
+			, #{step_size_multiple, javaType=string}
+			, #{ins_id, javaType=string}
+			, #{long_ins_id, javaType=string}
+			, #{date_last_trading, javaType=string}
+			, #{time_last_trading, javaType=string}
+			, #{date_first_trading, javaType=string}
+			, #{time_first_trading, javaType=string}
+			, #{series_status, javaType=string}
+			, #{suspended, javaType=string}
+			, #{traded_in_click, javaType=string}
+			, #{db_operation, javaType=string}
+			, #{trade_reporting_only, javaType=string}
+			, #{traded, javaType=string}
+			
+			, #{upper_level_series_country, javaType=string}
+			, #{upper_level_series_market, javaType=string}
+			, #{upper_level_series_instrument_group, javaType=string}
+			, #{upper_level_series_modifier, javaType=string}
+			, #{upper_level_series_commodity, javaType=string}
+			, #{upper_level_series_expiration_date, javaType=string}
+			, #{upper_level_series_strike_price, javaType=string}
+			
+			, #{contract_size, javaType=string}
+			, #{price_quot_factor, javaType=string}
+			, #{state_number, javaType=string}
+			, #{ex_coupon, javaType=string}
+			, #{isin_code, javaType=string}
+			, #{settlement_date, javaType=string}
+			, #{first_settlement_date, javaType=string}
+			, #{date_notation, javaType=string}
+			, #{deliverable, javaType=string}
+			, #{effective_exp_date, javaType=string}
+			, #{ext_info_source, javaType=string}
+			, #{participant_defined, javaType=string}
+			
+			, #{orderbook_id, javaType=string}
+			
+		) ON DUPLICATE KEY UPDATE `tm` = from_unixtime(#{msec, javaType=string} / 1000)
+			, `step_size_multiple` = #{step_size_multiple, javaType=string}
+			, `ins_id` = #{ins_id, javaType=string}
+			, `long_ins_id` = #{long_ins_id, javaType=string}
+			, `date_last_trading` = #{date_last_trading, javaType=string}
+			, `time_last_trading` = #{time_last_trading, javaType=string}
+			, `date_first_trading` = #{date_first_trading, javaType=string}
+			, `time_first_trading` = #{time_first_trading, javaType=string}
+			, `series_status` = #{series_status, javaType=string}
+			, `suspended` = #{suspended, javaType=string}
+			, `traded_in_click` = #{traded_in_click, javaType=string}
+			, `db_operation` = #{db_operation, javaType=string}
+			, `trade_reporting_only` = #{trade_reporting_only, javaType=string}
+			, `traded` = #{traded, javaType=string}
+			
+			, `upper_level_country` = #{upper_level_series_country, javaType=string}
+			, `upper_level_market` = #{upper_level_series_market, javaType=string}
+			, `upper_level_instrument` = #{upper_level_series_instrument_group, javaType=string}
+			, `upper_level_modifier` = #{upper_level_series_modifier, javaType=string}
+			, `upper_level_commodity` = #{upper_level_series_commodity, javaType=string}
+			, `upper_level_expiration` = #{upper_level_series_expiration_date, javaType=string}
+			, `upper_level_strike` = #{upper_level_series_strike_price, javaType=string}
+			
+			, `contract_size` = #{contract_size, javaType=string}
+			, `price_quot_factor` = #{price_quot_factor, javaType=string}
+			, `state_number` = #{state_number, javaType=string}
+			, `ex_coupon` = #{ex_coupon, javaType=string}
+			, `isin_code` = #{isin_code, javaType=string}
+			, `settlement_date` = #{settlement_date, javaType=string}
+			, `first_settlement_date` = #{first_settlement_date, javaType=string}
+			, `date_notation` = #{date_notation, javaType=string}
+			, `deliverable` = #{deliverable, javaType=string}
+			, `effective_exp_date` = #{effective_exp_date, javaType=string}
+			, `ext_info_source` = #{ext_info_source, javaType=string}
+			, `participant_defined` = #{participant_defined, javaType=string}
+			
+			, `orderbook_id` = #{orderbook_id, javaType=string}
+	</insert>
+	
+	<insert id="exchangeDa24" parameterType="map">
+		INSERT INTO `exchange_da24`(`tm`
+			, `country`
+			, `name`
+			, `exchange_short`
+			, `country_id`
+			, `tz_exchange`
+			, `master_clh_id`
+			, `country_short`
+			, `date_implementation`
+		) VALUES(from_unixtime(#{msec, javaType=string} / 1000)
+			, #{country, javaType=string}
+			, #{name, javaType=string}
+			, #{exchange_short, javaType=string}
+			, #{country_id, javaType=string}
+			, #{tz_exchange, javaType=string}
+			, #{master_clh_id, javaType=string}
+			, #{country_short, javaType=string}
+			, #{date_implementation, javaType=string}
+		) ON DUPLICATE KEY UPDATE `tm` = from_unixtime(#{msec, javaType=string} / 1000)
+			, `name` = #{name, javaType=string}
+			, `exchange_short` = #{exchange_short, javaType=string}
+			, `country_id` = #{country_id, javaType=string}
+			, `tz_exchange` = #{tz_exchange, javaType=string}
+			, `master_clh_id` = #{master_clh_id, javaType=string}
+			, `country_short` = #{country_short, javaType=string}
+			, `date_implementation` = #{date_implementation, javaType=string}
+	</insert>
+	
+	<insert id="dealSource" parameterType="map">
+		INSERT INTO `deal_source`(`tm`
+			, `deal_source`
+			, `ds_attribute`
+			, `desc_long`
+			, `desc_abbreviated`
+		) VALUES(from_unixtime(#{msec, javaType=string} / 1000)
+			, #{deal_source, javaType=string}
+			, #{ds_attribute, javaType=string}
+			, #{desc_long, javaType=string}
+			, #{desc_abbreviated, javaType=string}
+		) ON DUPLICATE KEY UPDATE `tm` = from_unixtime(#{msec, javaType=string} / 1000)
+			, `ds_attribute` = #{ds_attribute, javaType=string}
+			, `desc_long` = #{desc_long, javaType=string}
+			, `desc_abbreviated` = #{desc_abbreviated, javaType=string}
+	</insert>
+	
+	<insert id="clearingDate" parameterType="map">
+		INSERT INTO `clearing_date`(`tm`
+			, `country`
+			, `market`
+			, `instrument`
+			, `modifier`
+			, `commodity`
+			, `expiration`
+			, `strike`
+			
+			, `clearing_date`
+			
+			, `next_clearing_date`
+			, `prev_clearing_date`
+			, `tra_cl_next_day`
+		) VALUES(from_unixtime(#{msec, javaType=string} / 1000)
+			, #{country, javaType=string}
+			, #{market, javaType=string}
+			, #{instrument, javaType=string}
+			, #{modifier, javaType=string}
+			, #{commodity, javaType=string}
+			, #{expiration, javaType=string}
+			, #{strike, javaType=string}
+			
+			, #{clearing_date, javaType=string}
+			, #{next_clearing_date, javaType=string}
+			, #{prev_clearing_date, javaType=string}
+			, #{tra_cl_next_day, javaType=string}
+		) ON DUPLICATE KEY UPDATE `tm` = from_unixtime(#{msec, javaType=string} / 1000)
+			, `next_clearing_date` = #{next_clearing_date, javaType=string}
+			, `prev_clearing_date` = #{prev_clearing_date, javaType=string}
+			, `tra_cl_next_day` = #{tra_cl_next_day, javaType=string}
+	</insert>
+	
+	<insert id="nonTradingDays" parameterType="map">
+		INSERT INTO `non_trading_days`(`tm`
+			, `country`
+			, `market`
+			
+			, `date_non_trading`
+			
+			, `closed_for_trading`
+			, `closed_for_settlement`
+			, `closed_for_clearing`
+		) VALUES(from_unixtime(#{msec, javaType=string} / 1000)
+			, #{country, javaType=string}
+			, #{market, javaType=string}
+			, #{date_non_trading, javaType=string}
+			
+			, #{closed_for_trading, javaType=string}
+			, #{closed_for_settlement, javaType=string}
+			, #{closed_for_clearing, javaType=string}
+		) ON DUPLICATE KEY UPDATE `tm` = from_unixtime(#{msec, javaType=string} / 1000)
+			, `closed_for_trading` = #{closed_for_trading, javaType=string}
+			, `closed_for_settlement` = #{closed_for_settlement, javaType=string}
+			, `closed_for_clearing` =#{closed_for_clearing, javaType=string}
+	</insert>
+	
+</mapper>
+

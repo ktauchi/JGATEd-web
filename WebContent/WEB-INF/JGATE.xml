@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util.xsd
+                           http://camel.apache.org/schema/spring
+                           http://camel.apache.org/schema/spring/camel-spring.xsd">
+	<!-- -->
+	<bean id="JGATE.DA122-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.DA120-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.DA124-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.BU124-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.DA46-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.DA24-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.CA68-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.BD2.MII-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.BD2.MIB-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.BD70-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.MA1-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.BL51-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.EB10-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.RA62-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.BO16.BID-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.BO16.ASK-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.BI41-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.IA42-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	<bean id="JGATE.DA18-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	
+	<bean id="JGATE.RVD-queue" class="java.util.concurrent.LinkedBlockingQueue" />
+	
+	<bean id="bd2mib-service" class="local.minkabu.jgate.service.BD2MIBService" init-method="init" destroy-method="close">
+		<property name="redisClient">
+			<bean class="io.lettuce.core.RedisClient" factory-method="create">
+				<constructor-arg index="0" value="${redis.url}" />
+			</bean>
+		</property>
+		<property name="influxDB">
+			<bean class="org.influxdb.InfluxDBFactory" factory-method="connect">
+				<constructor-arg index="0" value="${influxdb.url}" />
+			</bean>
+		</property>
+		<property name="udpPort" value="${influxdb.udpPort}" />
+		<property name="measurement" value="mib" />
+	</bean>
+	
+	<bean id="bd2mii-service" class="local.minkabu.jgate.service.BD2MIIService" init-method="init" destroy-method="close">
+		<property name="redisClient">
+			<bean class="io.lettuce.core.RedisClient" factory-method="create">
+				<constructor-arg index="0" value="${redis.url}" />
+			</bean>
+		</property>
+		<property name="influxDB">
+			<bean class="org.influxdb.InfluxDBFactory" factory-method="connect">
+				<constructor-arg index="0" value="${influxdb.url}" />
+			</bean>
+		</property>
+		<property name="udpPort" value="${influxdb.udpPort}" />
+		<property name="measurement" value="mii" />
+	</bean>
+	
+	<bean id="bd70-service" class="local.minkabu.jgate.service.BD70Service" init-method="init" destroy-method="close">
+		<property name="redisClient">
+			<bean class="io.lettuce.core.RedisClient" factory-method="create">
+				<constructor-arg index="0" value="${redis.url}" />
+			</bean>
+		</property>
+		<property name="influxDB">
+			<bean class="org.influxdb.InfluxDBFactory" factory-method="connect">
+				<constructor-arg index="0" value="${influxdb.url}" />
+			</bean>
+		</property>
+		<property name="udpPort" value="${influxdb.udpPort}" />
+		<property name="measurement" value="btt" />
+	</bean>
+	
+	<bean id="bo16bid-service" class="local.minkabu.jgate.service.BO16Service" init-method="init" destroy-method="close">
+		<property name="redisClient">
+			<bean class="io.lettuce.core.RedisClient" factory-method="create">
+				<constructor-arg index="0" value="${redis.url}" />
+			</bean>
+		</property>
+		<property name="influxDB">
+			<bean class="org.influxdb.InfluxDBFactory" factory-method="connect">
+				<constructor-arg index="0" value="${influxdb.url}" />
+			</bean>
+		</property>
+		<property name="udpPort" value="${influxdb.udpPort}" />
+		<property name="measurement" value="bid" />
+	</bean>
+	
+	<bean id="bo16ask-service" class="local.minkabu.jgate.service.BO16Service" init-method="init" destroy-method="close">
+		<property name="redisClient">
+			<bean class="io.lettuce.core.RedisClient" factory-method="create">
+				<constructor-arg index="0" value="${redis.url}" />
+			</bean>
+		</property>
+		<property name="influxDB">
+			<bean class="org.influxdb.InfluxDBFactory" factory-method="connect">
+				<constructor-arg index="0" value="${influxdb.url}" />
+			</bean>
+		</property>
+		<property name="udpPort" value="${influxdb.udpPort}" />
+		<property name="measurement" value="ask" />
+	</bean>
+	
+	<bean id="bu124-service" class="local.minkabu.jgate.service.BU124Service" init-method="init" destroy-method="close">
+		<property name="mapper" ref="jgateMapper" />
+	</bean>
+	
+	<bean id="ca68-service" class="local.minkabu.jgate.service.CA68Service" init-method="init" destroy-method="close">
+		<property name="mapper" ref="jgateMapper" />
+	</bean>
+	
+	<bean id="da120-service" class="local.minkabu.jgate.service.DA120Service" init-method="init" destroy-method="close">
+		<property name="mapper" ref="jgateMapper" />
+	</bean>
+	
+	<bean id="da122-service" class="local.minkabu.jgate.service.DA122Service" init-method="init" destroy-method="close">
+		<property name="mapper" ref="jgateMapper" />
+	</bean>
+	
+	<bean id="da124-service" class="local.minkabu.jgate.service.DA124Service" init-method="init" destroy-method="close">
+		<property name="mapper" ref="jgateMapper" />
+	</bean>
+	
+	<bean id="da18-service" class="local.minkabu.jgate.service.DA18Service" init-method="init" destroy-method="close">
+		<property name="mapper" ref="jgateMapper" />
+	</bean>
+	
+	<bean id="da24-service" class="local.minkabu.jgate.service.DA24Service" init-method="init" destroy-method="close">
+		<property name="mapper" ref="jgateMapper" />
+	</bean>
+	<bean id="da46-service" class="local.minkabu.jgate.service.DA46Service" init-method="init" destroy-method="close">
+		<property name="mapper" ref="jgateMapper" />
+	</bean>
+	
+	<!-- MA1, BL51 -->
+	<bean id="pl-service" class="local.minkabu.jgate.service.PLService" init-method="init" destroy-method="close">
+		<property name="redisClient">
+			<bean class="io.lettuce.core.RedisClient" factory-method="create">
+				<constructor-arg index="0" value="${redis.url}" />
+			</bean>
+		</property>
+		<property name="influxDB">
+			<bean class="org.influxdb.InfluxDBFactory" factory-method="connect">
+				<constructor-arg index="0" value="${influxdb.url}" />
+			</bean>
+		</property>
+		<property name="udpPort" value="${influxdb.udpPort}" />
+		<property name="measurement" value="pl" />
+	</bean>
+	
+	<!-- EB10 / RA62 -->
+	<bean id="pvs-service" class="local.minkabu.jgate.service.PVSService" init-method="init" destroy-method="close">
+		<property name="redisClient">
+			<bean class="io.lettuce.core.RedisClient" factory-method="create">
+				<constructor-arg index="0" value="${redis.url}" />
+			</bean>
+		</property>
+		<property name="influxDB">
+			<bean class="org.influxdb.InfluxDBFactory" factory-method="connect">
+				<constructor-arg index="0" value="${influxdb.url}" />
+			</bean>
+		</property>
+		<property name="udpPort" value="${influxdb.udpPort}" />
+		<property name="measurement" value="pvs" />
+	</bean>
+	
+	<bean id="rvd-service" class="local.minkabu.jgate.service.RvdService">
+		<property name="rvdTransport" ref="rvdTransport" />
+		<property name="prefix" value="${rvd.prefix}" />
+	</bean>
+	
+	<!-- -->
+    <routeContext id="JGATE-route" xmlns="http://camel.apache.org/schema/spring">
+		
+		<!-- JGATE.DA122 -->
+		<route id="nats-JGATE.DA122">
+			<from uri="nats:JGATE.DA122?servers=localhost:4222" />
+			<to uri="seda:JGATE.DA122?queue=#JGATE.DA122-queue" />
+		</route>
+		
+		<route id="seda-JGATE.DA122">
+			<from uri="seda:JGATE.DA122?queue=#JGATE.DA122-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:da122-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.DA120 -->
+		<route id="nats-JGATE.DA120">
+			<from uri="nats:JGATE.DA120?servers=localhost:4222" />
+			<to uri="seda:JGATE.DA120?queue=#JGATE.DA120-queue" />
+		</route>
+		
+		<route id="seda-JGATE.DA120">
+			<from uri="seda:JGATE.DA120?queue=#JGATE.DA120-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:da120-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.DA124 -->
+		<route id="nats-JGATE.DA124">
+			<from uri="nats:JGATE.DA124?servers=localhost:4222" />
+			<to uri="seda:JGATE.DA124?queue=#JGATE.DA124-queue" />
+		</route>
+		
+		<route id="seda-JGATE.DA124">
+			<from uri="seda:JGATE.DA124?queue=#JGATE.DA124-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:da124-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.BU124 -->
+		<route id="nats-JGATE.BU124">
+			<from uri="nats:JGATE.BU124?servers=localhost:4222" />
+			<to uri="seda:JGATE.BU124?queue=#JGATE.BU124-queue" />
+		</route>
+		
+		<route id="seda-JGATE.BU124">
+			<from uri="seda:JGATE.BU124?queue=#JGATE.BU124-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:bu124-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.DA46 -->
+		<route id="nats-JGATE.DA46">
+			<from uri="nats:JGATE.DA46?servers=localhost:4222" />
+			<to uri="seda:JGATE.DA46?queue=#JGATE.DA46-queue" />
+		</route>
+		
+		<route id="seda-JGATE.DA46">
+			<from uri="seda:JGATE.DA46?queue=#JGATE.DA46-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:da46-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.DA24 -->
+		<route id="nats-JGATE.DA24">
+			<from uri="nats:JGATE.DA24?servers=localhost:4222" />
+			<to uri="seda:JGATE.DA24?queue=#JGATE.DA24-queue" />
+		</route>
+		
+		<route id="seda-JGATE.DA24">
+			<from uri="seda:JGATE.DA24?queue=#JGATE.DA24-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:da24-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.CA68 -->
+		<route id="nats-JGATE.CA68">
+			<from uri="nats:JGATE.CA68?servers=localhost:4222" />
+			<to uri="seda:JGATE.CA68?queue=#JGATE.CA68-queue" />
+		</route>
+		
+		<route id="seda-JGATE.CA68">
+			<from uri="seda:JGATE.CA68?queue=#JGATE.CA68-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:ca68-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.BD2@MII -->
+		<route id="nats-JGATE.BD2.MII">
+			<from uri="nats:JGATE.BD2@MII?servers=localhost:4222" />
+			<to uri="seda:JGATE.BD2.MII?queue=#JGATE.BD2.MII-queue" />
+		</route>
+		
+		<route id="seda-JGATE.BD2.MII">
+			<from uri="seda:JGATE.BD2.MII?queue=#JGATE.BD2.MII-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<step>
+					<to uri="bean:bd2mii-service?method=parse" />
+					<multicast>
+						<to uri="bean:bd2mii-service?method=redis" />
+						<to uri="bean:bd2mii-service?method=line" />
+					</multicast>
+				</step>
+				<to uri="bean:rvd-service?method=publish" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.BD2@MIB-->
+		<route id="nats-JGATE.BD2.MIB">
+			<from uri="nats:JGATE.BD2@MIB?servers=localhost:4222" />
+			<to uri="seda:JGATE.BD2.MIB?queue=#JGATE.BD2.MIB-queue" />
+		</route>
+		
+		<route id="seda-JGATE.BD2.MIB">
+			<from uri="seda:JGATE.BD2.MIB?queue=#JGATE.BD2.MIB-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<step>
+					<to uri="bean:bd2mib-service?method=parse" />
+					<multicast>
+						<to uri="bean:bd2mib-service?method=redis" />
+						<to uri="bean:bd2mib-service?method=line" />
+					</multicast>
+				</step>
+				<to uri="bean:rvd-service?method=publish" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.BD70 -->
+		<route id="nats-JGATE.BD70">
+			<from uri="nats:JGATE.BD70?servers=localhost:4222" />
+			<to uri="seda:JGATE.BD70?queue=#JGATE.BD70-queue" />
+		</route>
+		
+		<route id="seda-JGATE.BD70">
+			<from uri="seda:JGATE.BD70?queue=#JGATE.BD70-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:bd70-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.MA1 -->
+		<route id="nats-JGATE.MA1">
+			<from uri="nats:JGATE.MA1?servers=localhost:4222" />
+			<to uri="seda:JGATE.MA1?queue=#JGATE.MA1-queue" />
+		</route>
+		
+		<route id="seda-JGATE.MA1">
+			<from uri="seda:JGATE.MA1?queue=#JGATE.MA1-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:pl-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.BL51 -->
+		<route id="nats-JGATE.BL51">
+			<from uri="nats:JGATE.BL51?servers=localhost:4222" />
+			<to uri="seda:JGATE.BL51?queue=#JGATE.BL51-queue" />
+		</route>
+		
+		<route id="seda-JGATE.BL51">
+			<from uri="seda:JGATE.BL51?queue=#JGATE.BL51-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:pl-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.EB10 -->
+		<route id="nats-JGATE.EB10">
+			<from uri="nats:JGATE.EB10?servers=localhost:4222" />
+			<to uri="seda:JGATE.EB10?queue=#JGATE.EB10-queue" />
+		</route>
+		
+		<route id="seda-JGATE.EB10">
+			<from uri="seda:JGATE.EB10?queue=#JGATE.EB10-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:pvs-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.RA62 -->
+		<route id="nats-JGATE.RA62">
+			<from uri="nats:JGATE.RA62?servers=localhost:4222" />
+			<to uri="seda:JGATE.RA62?queue=#JGATE.RA62-queue" />
+		</route>
+		
+		<route id="seda-JGATE.RA62">
+			<from uri="seda:JGATE.RA62?queue=#JGATE.RA62-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:pvs-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.BO16@BID -->
+		<route id="nats-JGATE.BO16.BID">
+			<from uri="nats:JGATE.BO16@BID?servers=localhost:4222" />
+			<to uri="seda:JGATE.BO16.BID?queue=#JGATE.BO16.BID-queue" />
+		</route>
+		
+		<route id="seda-JGATE.BO16.BID">
+			<from uri="seda:JGATE.BO16.BID?queue=#JGATE.BO16.BID-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:bo16bid-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.BO16@ASK -->
+		<route id="nats-JGATE.BO16.ASK">
+			<from uri="nats:JGATE.BO16@ASK?servers=localhost:4222" />
+			<to uri="seda:JGATE.BO16.ASK?queue=#JGATE.BO16.ASK-queue" />
+		</route>
+		
+		<route id="seda-JGATE.BO16.ASK">
+			<from uri="seda:JGATE.BO16.ASK?queue=#JGATE.BO16.ASK-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:bo16ask-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.BI41 -->
+		<route id="nats-JGATE.BI41">
+			<from uri="nats:JGATE.BI41?servers=localhost:4222" />
+			<to uri="seda:JGATE.BI41?queue=#JGATE.BI41-queue" />
+		</route>
+		
+		<route id="seda-JGATE.BI41">
+			<from uri="seda:JGATE.BI41?queue=#JGATE.BI41-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:rvd-service?method=publish" />
+			</multicast>
+		</route>
+		
+		<!-- JGATE.IA42 -->
+		<route id="nats-JGATE.IA42">
+			<from uri="nats:JGATE.IA42?servers=localhost:4222" />
+			<to uri="seda:JGATE.IA42?queue=#JGATE.IA42-queue" />
+		</route>
+		
+		<route id="seda-JGATE.IA42">
+			<from uri="seda:JGATE.IA42?queue=#JGATE.IA42-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:rvd-service?method=publish" />
+			</multicast>
+		</route>
+		
+		<!-- DA18 -->
+		<route id="nats-JGATE.DA18">
+			<from uri="nats:JGATE.DA18?servers=localhost:4222" />
+			<to uri="seda:JGATE.DA18?queue=#JGATE.DA18-queue" />
+		</route>
+		
+		<route id="seda-JGATE.DA18">
+			<from uri="seda:JGATE.DA18?queue=#JGATE.DA18-queue" />
+			<process ref="unpackProcessor" />
+			<multicast>
+				<to uri="bean:da18-service?method=parse" />
+			</multicast>
+		</route>
+		
+		<!-- RVD -->
+		<!--
+		<route id="nats-JGATE.RVD">
+			<from uri="nats:JGATE.>?servers=localhost:4222" />
+			<to uri="seda:JGATE.RVD?queue=#JGATE.RVD-queue" />
+		</route>
+		
+		<route id="seda-JGATE.RVD">
+			<from uri="seda:JGATE.RVD?queue=#JGATE.RVD-queue" />
+			<process ref="unpackProcessor" />
+			<to uri="bean:rvd-service?method=publish" />
+		</route>
+		-->
+    </routeContext>
+</beans>

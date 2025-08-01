@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim: set ts=4: -->
+
+<Configuration status="WARN">
+	<Properties>
+		<Property name="logfile">logs/JGATE.log</Property>
+		
+		<Property name="syslog-host" value="127.0.0.1" />
+		<Property name="syslog-port" value="514" />
+		<Property name="syslog-protocol" value="UDP" />
+		<Property name="syslog-ident" value="JGATEd-web" />
+		<Property name="syslog-local1" value="&lt;%level{TRACE=143, DEBUG=143, INFO=142, WARN=140, ERROR=139, Fatal=136}&gt;" />
+		<Property name="syslog-local2" value="&lt;%level{TRACE=151, DEBUG=151, INFO=150, WARN=148, ERROR=147, Fatal=144}&gt;" />
+		<Property name="syslog-local3" value="&lt;%level{TRACE=159, DEBUG=159, INFO=158, WARN=156, ERROR=155, Fatal=152}&gt;" />
+		<Property name="syslog-local4" value="&lt;%level{TRACE=167, DEBUG=167, INFO=166, WARN=164, ERROR=163, Fatal=160}&gt;" />
+		<Property name="syslog-local5" value="&lt;%level{TRACE=175, DEBUG=175, INFO=174, WARN=172, ERROR=171, Fatal=168}&gt;" />
+	</Properties>
+	
+	<Appenders>
+		<Console name="stdout" target="SYSTEM_OUT">
+			<PatternLayout charset="UTF-8" pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] %level %logger - %msg%n" />
+		</Console>
+		
+		<Console name="stderr" target="SYSTEM_ERR">
+			<PatternLayout charset="UTF-8" pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] %level %logger - %msg%n" />
+		</Console>
+		
+		<RollingFile name="rollingFile"
+		             fileName="${sys:catalina.base}/${logfile}"
+		             filePattern="${sys:catalina.base}/${logfile}-%d{yyyyMMddHH}"
+		             filePermissions="rw-r--r--">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %c{1}(%L) - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy compressionLevel="0" />
+		</RollingFile>
+		
+		<Socket name="local3" host="${syslog-host}" port="${syslog-port}" protocol="${syslog-protocol}">
+			<PatternLayout pattern="${syslog-local3}${syslog-ident}[%pid] %level %threadName(%threadId) %logger{1.} - %msg%n"/>
+		</Socket>
+	</Appenders>
+	
+	<Loggers>
+		
+		<!--
+		<Logger name="org.apache.http" level="warn">
+		</Logger>
+		-->
+		
+		<Logger name="io.netty" level="debug" />
+		<Logger name="io.lettuce" level="warn" />
+		<Logger name="reactor" level="warn" />
+		
+		<Logger name="org.apache.camel" level="warn" />
+		
+		<Logger name="org.apache.http" level="warn" />
+		<!-- <logger name="org.apache.http.impl" level="debug" /> -->
+		
+		<Logger name="org.apache.http.impl.conn.PoolingHttpClientConnectionManager" level="debug" />
+		<Logger name="org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager" level="debug" />
+		
+		<Logger name="org.mybatis.spring." level="warn" additivity="false" />
+		<Logger name="org.springframework.jdbc" level="warn" additivity="false" />
+		
+		<Logger name="org.springframework.web.servlet.DispatcherServlet" level="debug" />
+		
+		<Logger name="local.minkabu.jgate.service" level="debug" />
+		<Logger name="local.minkabu.jgate.processor" level="debug" />
+		
+		<Root level="warn">
+			<AppenderRef ref="rollingFile"/>
+			<!--
+			<AppenderRef ref="local1" level="error" />
+			<AppenderRef ref="local2" level="error" />
+			-->
+			<AppenderRef ref="local3" level="error" />
+			<!--
+			<AppenderRef ref="local4" level="error" />
+			<AppenderRef ref="local5" level="error" />
+			-->
+		</Root>
+	</Loggers>
+</Configuration>
+
