@@ -204,6 +204,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:da120-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
@@ -218,6 +219,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:da124-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
@@ -232,6 +234,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:bu124-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
@@ -246,6 +249,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:da46-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
@@ -260,6 +264,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:da24-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
@@ -274,6 +279,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:ca68-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
@@ -330,6 +336,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:bd70-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
@@ -344,6 +351,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:pl-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
@@ -372,6 +380,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:pvs-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
@@ -386,6 +395,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:pvs-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
@@ -400,6 +410,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:bo16bid-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
@@ -414,6 +425,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:bo16ask-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
@@ -456,6 +468,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="bean:da18-service?method=parse" />
+				<to uri="bean:rvd-service?method=publish" />
 			</multicast>
 		</route>
 		
