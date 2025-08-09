@@ -135,9 +135,9 @@ import local.minkabu.jgate.mapper.JGATEMapper;
 		
 		Map<String, String> data = new HashMap<>(body);
 		
-		body.put(FieldUtils.MSEC, Long.toString(msec));
+		data.put(FieldUtils.MSEC, Long.toString(msec));
 		try{
-			mapper.dealSource(body);
+			mapper.dealSource(data);
 		}catch(Exception e){
 			logger.error(e.getMessage());
 		}

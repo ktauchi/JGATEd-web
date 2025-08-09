@@ -209,6 +209,8 @@ import local.minkabu.jgate.service.FieldUtils;
 		String subject = (String)headers.get(NatsConstants.NATS_SUBJECT);
 		logger.debug("subject: {}, body: {}", subject, body);
 		
+		Map<String, String> map = new HashMap<String, String>(body);
+		
 		long msec = (long)headers.get(NatsConstants.NATS_MESSAGE_TIMESTAMP);
 		
 		// JST, -7h offset, 日替わりが 06:00-07:00(オフライン時刻)になる様調整
@@ -234,11 +236,11 @@ import local.minkabu.jgate.service.FieldUtils;
 		long nsec = msec * 1_000 * 1_000;
 		
 		// MILLISECONDS, MICROSECONDS, NANOSECONDS を補完, number_of_deals(値付回数)を利用
-		long nod = NumberUtils.toLong(body.get("number_of_deals"));
+		long nod = NumberUtils.toLong(map.get("number_of_deals"));
 		
 		nsec += (nod % 1_000_000_000);
 		
-		FieldUtils.moveSeries(headers, body);
+		FieldUtils.moveSeries(headers, map);
 		/*
 		headers.put(FieldUtils.COUNTRY, FieldUtils.removeSeriesCountry(body));
 		headers.put(FieldUtils.MARKET, FieldUtils.removeSeriesMarket(body));
@@ -257,16 +259,16 @@ import local.minkabu.jgate.service.FieldUtils;
 		
 		Map<String, String> data = new HashMap<String, String>(){
 			{
-				put(FieldUtils.OPEN, body.get(FieldUtils.OPENING_PRICE));
-				put(FieldUtils.HIGH, body.get(FieldUtils.HIGH_PRICE));
-				put(FieldUtils.LOW, body.get(FieldUtils.LOW_PRICE));
-				put(FieldUtils.LAST, body.get(FieldUtils.LAST_PRICE));
-				put(FieldUtils.VOLUME, body.get(FieldUtils.VOLUME));
-				put(FieldUtils.TURNOVER, body.get(FieldUtils.TURNOVER));
+				put(FieldUtils.OPEN, map.get(FieldUtils.OPENING_PRICE));
+				put(FieldUtils.HIGH, map.get(FieldUtils.HIGH_PRICE));
+				put(FieldUtils.LOW, map.get(FieldUtils.LOW_PRICE));
+				put(FieldUtils.LAST, map.get(FieldUtils.LAST_PRICE));
+				put(FieldUtils.VOLUME, map.get(FieldUtils.VOLUME));
+				put(FieldUtils.TURNOVER, map.get(FieldUtils.TURNOVER));
 			}
 		};
 		
-		headers.put(FieldUtils.INDICATOR, body.get("trend_indicator"));
+		headers.put(FieldUtils.INDICATOR, map.get("trend_indicator"));
 		/*
 			.addField("open", NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get(FieldUtils.OPENING_PRICE), null)))
 			.addField("high", NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get(FieldUtils.HIGH_PRICE), null)))

@@ -190,9 +190,11 @@ import local.minkabu.jgate.service.FieldUtils;
 		String subject = (String)headers.get(NatsConstants.NATS_SUBJECT);
 		logger.debug("subject: {}, body: {}", subject, body);
 		
+		Map<String, String> map = new HashMap<>(body);
+		
 		long msec = (long)headers.get(NatsConstants.NATS_MESSAGE_TIMESTAMP);
 		
-		String dist = body.get("date_time_of_dist");
+		String dist = map.get("date_time_of_dist");
 		if(!StringUtils.isEmpty(dist)){
 			try{
 				Date date = distSimpleDateFormat.parse(dist);
@@ -203,15 +205,15 @@ import local.minkabu.jgate.service.FieldUtils;
 		}
 		headers.put(FieldUtils.MSEC, msec);
 		
-		FieldUtils.moveSeries(headers, body);
+		FieldUtils.moveSeries(headers, map);
 		
 		Map<String, String> data = new HashMap<String, String>(){
 			{
-				put(OPEN, body.get("opening_price"));
-				put(HIGH, body.get("high_price"));
-				put(LOW, body.get("low_price"));
-				put(LAST, body.get("last_price"));
-				put(CLOSE, body.get("closing_price"));
+				put(OPEN, map.get("opening_price"));
+				put(HIGH, map.get("high_price"));
+				put(LOW, map.get("low_price"));
+				put(LAST, map.get("last_price"));
+				put(CLOSE, map.get("closing_price"));
 			}
 		};
 		

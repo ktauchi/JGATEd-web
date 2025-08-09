@@ -184,7 +184,9 @@ import org.slf4j.LoggerFactory;
 		
 		long msec = (long)headers.get(NatsConstants.NATS_MESSAGE_TIMESTAMP);
 		
-		FieldUtils.moveSeries(headers, body);
+		Map<String, String> data = new HashMap<>(body);
+		
+		FieldUtils.moveSeries(headers, data);
 		
 		String country = FieldUtils.country(headers);
 		String market = FieldUtils.market(headers);
@@ -194,9 +196,9 @@ import org.slf4j.LoggerFactory;
 		String expirationDate = FieldUtils.expiration(headers);
 		String strikePrice = FieldUtils.strike(headers);
 		
-		Number upper = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("upper_limit"), null));
-		Number lower = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("lower_limit"), null));
-		Number reference = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("reference_premium"), null));
+		Number upper = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("upper_limit"), null));
+		Number lower = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("lower_limit"), null));
+		Number reference = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("reference_premium"), null));
 		
 		Point.Builder pointBuilder = Point.measurement(measurement)
 			.time(msec, TimeUnit.MILLISECONDS)

@@ -156,7 +156,9 @@ import local.minkabu.jgate.service.FieldUtils;
 		
 		long msec = (long)headers.get(NatsConstants.NATS_MESSAGE_TIMESTAMP);
 		
-		FieldUtils.moveSeries(headers, body);
+		Map<String, String> map = new HashMap<String, String>(body);
+		
+		FieldUtils.moveSeries(headers, map);
 		
 		String country = FieldUtils.country(headers);
 		String market = FieldUtils.market(headers);
@@ -168,7 +170,7 @@ import local.minkabu.jgate.service.FieldUtils;
 		
 		//Map<String, String> data = new HashMap<>(body);
 		// .(ドット)を含むキーを _(アンダースコア)でリプレース
-		Map<String, String> data = body.entrySet().stream().collect(Collectors.toMap(entry -> StringUtils.replaceChars(entry.getKey(), '.', '_'), entry -> entry.getValue()));
+		Map<String, String> data = map.entrySet().stream().collect(Collectors.toMap(entry -> StringUtils.replaceChars(entry.getKey(), '.', '_'), entry -> entry.getValue()));
 		//FieldUtils.put(data, country, market, instrument, modifier, commodity, expirationDate, strikePrice);
 		FieldUtils.put(data, headers);
 		

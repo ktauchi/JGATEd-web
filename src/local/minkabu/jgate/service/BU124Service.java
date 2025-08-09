@@ -150,14 +150,29 @@ import local.minkabu.jgate.mapper.JGATEMapper;
 		
 		long msec = (long)headers.get(NatsConstants.NATS_MESSAGE_TIMESTAMP);
 		
+		Map<String, String> map = new HashMap<String, String>(body);
+		
+		FieldUtils.moveSeries(headers, map);
+		
+		String country = FieldUtils.country(headers);
+		String market = FieldUtils.market(headers);
+		String instrument = FieldUtils.instrument(headers);
+		String modifier = FieldUtils.modifier(headers);
+		String commodity = FieldUtils.commodity(headers);
+		String expirationDate = FieldUtils.expiration(headers);
+		String strikePrice = FieldUtils.strike(headers);
+		
+		//Map<String, String> data = new HashMap<>(body);
 		// .(ドット)を含むキーを _(アンダースコア)でリプレース
-		Map<String, String> data = body.entrySet().stream().collect(Collectors.toMap(entry -> StringUtils.replaceChars(entry.getKey(), '.', '_'), entry -> entry.getValue()));
+		Map<String, String> data = map.entrySet().stream().collect(Collectors.toMap(entry -> StringUtils.replaceChars(entry.getKey(), '.', '_'), entry -> entry.getValue()));
+		//FieldUtils.put(data, country, market, instrument, modifier, commodity, expirationDate, strikePrice);
+		FieldUtils.put(data, headers);
 		
 		data.put(FieldUtils.MSEC, Long.toString(msec));
 		try{
 			mapper.instSeriesBasic(data);
 		}catch(Exception e){
-			logger.error(e.getMessage());
+			logger.error("{}, subject: {}, body: {}", e.getMessage(), subject, body);
 		}
 		return;
 	}

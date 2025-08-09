@@ -209,7 +209,9 @@ import org.slf4j.LoggerFactory;
 		
 		long msec = (long)headers.get(NatsConstants.NATS_MESSAGE_TIMESTAMP);
 		
-		FieldUtils.moveSeries(headers, body);
+		Map<String, String> data = new HashMap<>(body);
+		
+		FieldUtils.moveSeries(headers, data);
 		
 		String country = FieldUtils.country(headers);
 		String market = FieldUtils.market(headers);
@@ -219,23 +221,23 @@ import org.slf4j.LoggerFactory;
 		String expirationDate = FieldUtils.expiration(headers);
 		String strikePrice = FieldUtils.strike(headers);
 		
-		Number lastp = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("last_price"), null));
-		Number settlep = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("settle_price"), null));
-		Number actualv = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("actual_vol"), null));
-		Number theop = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("theo_price"), null));
-		Number curvwv = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("current_vwv"), null));
-		Number calvwv = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("calc_vwv"), null));
-		Number prevwv = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("prev_vwv"), null));
-		Number rfr = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("risk_free_rate"), null));
-		Number ulgp = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("ulg_price"), null));
+		Number lastp = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("last_price"), null));
+		Number settlep = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("settle_price"), null));
+		Number actualv = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("actual_vol"), null));
+		Number theop = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("theo_price"), null));
+		Number curvwv = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("current_vwv"), null));
+		Number calvwv = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("calc_vwv"), null));
+		Number prevwv = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("prev_vwv"), null));
+		Number rfr = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("risk_free_rate"), null));
+		Number ulgp = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("ulg_price"), null));
 		
 		// EB10
-		Number implv = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("implied_vol"), null));
-		long spt = NumberUtils.toLong(body.get("settlement_price_type"), 0);
+		Number implv = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("implied_vol"), null));
+		long spt = NumberUtils.toLong(data.get("settlement_price_type"), 0);
 		
 		// RA62
-		Number divy = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("dividend_yield"), null));
-		Number divs = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("dividend_sum"), null));
+		Number divy = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("dividend_yield"), null));
+		Number divs = NumberUtils.createNumber(StringUtils.defaultIfEmpty(data.get("dividend_sum"), null));
 		
 		Point.Builder pointBuilder = Point.measurement(measurement)
 			.time(msec, TimeUnit.MILLISECONDS)

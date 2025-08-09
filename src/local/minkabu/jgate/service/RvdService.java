@@ -168,12 +168,12 @@ import org.slf4j.LoggerFactory;
 			
 			msg.setSendSubject(subject);
 			for(Map.Entry<String, String> e : body.entrySet()){
-				msg.add(e.getKey(), e.getValue());
+				msg.add(e.getKey(), StringUtils.defaultString(e.getValue()));
 			}
 			
 			rvdTransport.send(msg);
 		}catch(Exception e){
-			logger.error(e.getMessage());
+			logger.error("{}, {}, {}", e.getMessage(), subject, body);
 		}
 		
 		return;

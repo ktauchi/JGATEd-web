@@ -191,33 +191,35 @@ import local.minkabu.jgate.service.FieldUtils;
 		
 		long msec = (long)headers.get(NatsConstants.NATS_MESSAGE_TIMESTAMP);
 		
+		Map<String, String> map = new HashMap<String, String>(body);
+		
 		// 40件以上の注文での約定で、BD70 が分割される
 		// 分割された場合、初回以降のデータについては、deal_quantityが0
 		// segment_number で比較したいが、分割無し segment_number = 0, 分割有り segment_number = 1,2,3,...,0 となるため
 		// deal_quantity で検出
 		long quantity = 0;
-		quantity = NumberUtils.toLong(body.get("deal_quantity"), 0);
+		quantity = NumberUtils.toLong(map.get("deal_quantity"), 0);
 		if(0 == quantity){
 			return;
 		}
 		
-		long sec = NumberUtils.toLong(body.get("timestamp_match.tv_sec"));
-		long nsec = NumberUtils.toLong(body.get("timestamp_match.tv_nsec"));
+		long sec = NumberUtils.toLong(map.get("timestamp_match.tv_sec"));
+		long nsec = NumberUtils.toLong(map.get("timestamp_match.tv_nsec"));
 		
 		nsec += sec * 1_000_000_000;
 		
 		// 同一 nsec で約定が発生する場合が有るため、execution_event_nbr の下9桁で ms,us,ns を代用
-		long event = NumberUtils.toLong(body.get("execution_event_nbr"));
+		long event = NumberUtils.toLong(map.get("execution_event_nbr"));
 		
 		long ns = sec * 1_000_000_000 + (event % 1_000_000_000);
 		
-		Number price = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("deal_price"), null));
-		Number state = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get("state_number"), null));
+		Number price = NumberUtils.createNumber(StringUtils.defaultIfEmpty(map.get("deal_price"), null));
+		Number state = NumberUtils.createNumber(StringUtils.defaultIfEmpty(map.get("state_number"), null));
 		
 		// J-NET 取引, 11 or 12, ref: 4.6.5
-		long trt = NumberUtils.toLong(body.get("trade_report_type"), 0);
+		long trt = NumberUtils.toLong(map.get("trade_report_type"), 0);
 		
-		FieldUtils.moveSeries(headers, body);
+		FieldUtils.moveSeries(headers, map);
 		
 		String country = FieldUtils.country(headers);
 		String market = FieldUtils.market(headers);
@@ -248,7 +250,7 @@ import local.minkabu.jgate.service.FieldUtils;
 		//String series = FieldUtils.series(country, market, instrumentGroup, modifier, commodity, expirationDate, strikePrice);
 		String series = FieldUtils.series(headers);
 		
-		Map<String, String> data = body.entrySet().stream().collect(Collectors.toMap(entry -> StringUtils.join(FieldUtils.bd70, ".", entry.getKey()), entry -> entry.getValue()));
+		Map<String, String> data = map.entrySet().stream().collect(Collectors.toMap(entry -> StringUtils.join(FieldUtils.bd70, ".", entry.getKey()), entry -> entry.getValue()));
 		
 		try(StatefulRedisConnection<String, String> redisConnection = redisClient.connect()){
 			RedisCommands<String, String> redisCommands = redisConnection.sync();

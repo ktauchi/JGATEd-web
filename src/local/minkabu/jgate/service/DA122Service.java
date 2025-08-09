@@ -192,7 +192,9 @@ import local.minkabu.jgate.service.FieldUtils;
 		
 		long msec = (long)headers.get(NatsConstants.NATS_MESSAGE_TIMESTAMP);
 		
-		FieldUtils.moveSeries(headers, body);
+		Map<String, String> map = new HashMap<String, String>(body);
+		
+		FieldUtils.moveSeries(headers, map);
 		String country = FieldUtils.country(headers);
 		String market = FieldUtils.market(headers);
 		String instrumentGroup = FieldUtils.instrument(headers);
@@ -202,7 +204,7 @@ import local.minkabu.jgate.service.FieldUtils;
 		String strikePrice = FieldUtils.strike(headers);
 		
 		// .(ドット)を含むキーを _(アンダースコア)でリプレース
-		Map<String, String> data = body.entrySet().stream().collect(Collectors.toMap(entry -> StringUtils.replaceChars(entry.getKey(), '.', '_'), entry -> entry.getValue()));
+		Map<String, String> data = map.entrySet().stream().collect(Collectors.toMap(entry -> StringUtils.replaceChars(entry.getKey(), '.', '_'), entry -> entry.getValue()));
 		
 		FieldUtils.put(data, headers);
 		//FieldUtils.put(data, country, market, instrumentGroup, modifier, commodity, expirationDate, strikePrice);
@@ -238,14 +240,14 @@ import local.minkabu.jgate.service.FieldUtils;
 		*/
 		
 		int i = 0;
-		while(body.containsKey(StringUtils.join(String.valueOf(i), ".", STEP_SIZE))){
+		while(map.containsKey(StringUtils.join(String.valueOf(i), ".", STEP_SIZE))){
 			
-			m.put(STEP_SIZE, body.get(StringUtils.join(String.valueOf(i), ".", STEP_SIZE)));
-			m.put(LOWER_LIMIT, body.get(StringUtils.join(String.valueOf(i), ".", LOWER_LIMIT)));
-			m.put(UPPER_LIMIT, body.get(StringUtils.join(String.valueOf(i), ".", UPPER_LIMIT)));
-			m.put(IS_FRACTIONS, body.get(StringUtils.join(String.valueOf(i), ".", IS_FRACTIONS)));
+			m.put(STEP_SIZE, map.get(StringUtils.join(String.valueOf(i), ".", STEP_SIZE)));
+			m.put(LOWER_LIMIT, map.get(StringUtils.join(String.valueOf(i), ".", LOWER_LIMIT)));
+			m.put(UPPER_LIMIT, map.get(StringUtils.join(String.valueOf(i), ".", UPPER_LIMIT)));
+			m.put(IS_FRACTIONS, map.get(StringUtils.join(String.valueOf(i), ".", IS_FRACTIONS)));
 			
-			m.put(DEC_IN_PREMIUM, body.get(DEC_IN_PREMIUM));
+			m.put(DEC_IN_PREMIUM, map.get(DEC_IN_PREMIUM));
 			
 			m.put(FieldUtils.MSEC, Long.toString(msec));
 			try{

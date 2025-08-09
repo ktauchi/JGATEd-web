@@ -227,10 +227,12 @@ import org.slf4j.LoggerFactory;
 		
 		long msec = (long)headers.get(NatsConstants.NATS_MESSAGE_TIMESTAMP);
 		
+		Map<String, String> map = new HashMap<String, String>(body);
+		
 		long sn = NumberUtils.toLong(body.get("synchronization_number"), 0);
 		long nsec = (msec * 1_000_000) + (sn % 1_000_000_000);
 		
-		FieldUtils.moveSeries(headers, body);
+		FieldUtils.moveSeries(headers, map);
 		/*
 		headers.put(FieldUtils.COUNTRY, FieldUtils.removeSeriesCountry(body);
 		headers.put(FieldUtils.MARKET, FieldUtils.removeSeriesMarket(body);
@@ -241,35 +243,7 @@ import org.slf4j.LoggerFactory;
 		headers.put(FieldUtils.STRIKE, FieldUtils.removeSeriesStrikePrice(body);
 		*/
 		
-		Map<String, String> data = new HashMap<>();
-		for(int i = 0; i < 10; i++){
-			String pKey = String.format("%d.price", i);
-			String qKey = String.format("%d.quantity", i);
-			
-			if(body.containsKey(pKey)){
-				try{
-					//p[i] = toNumber(body.get(pKey));
-					Number p = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get(pKey), null));
-					data.put(String.format("%s.p%d", measurement, i), String.valueOf(p));
-				}catch(Exception e){
-					logger.error(e.getMessage());
-				}
-			}else{
-				break;
-			}
-			
-			if(body.containsKey(qKey)){
-				try{
-					//q[i] = toNumber(body.get(qKey));
-					Number q = NumberUtils.createNumber(StringUtils.defaultIfEmpty(body.get(qKey), null));
-					data.put(String.format("%s.q%d", measurement, i), String.valueOf(q));
-				}catch(Exception e){
-					logger.error(e.getMessage());
-				}
-			}
-		}
-		
-		exchange.getIn().setBody(data);
+		exchange.getIn().setBody(map);
 		
 		return;
 	}
@@ -280,7 +254,29 @@ import org.slf4j.LoggerFactory;
 		
 		logger.debug("subject: {}, series: {}, body: {}", subject, series, body);
 		
-		Map<String, String> data = new HashMap<>(body);
+		Map<String, String> data = new HashMap<>();
+		for(int i = 0; i < 10; i++){
+			String pKey = String.format("%d.price", i);
+			String qKey = String.format("%d.quantity", i);
+		
+			if(body.containsKey(pKey)){
+				try{
+					data.put(StringUtils.join(measurement, ".", pKey), body.get(pKey));
+				}catch(Exception e){
+				}
+			}else{
+				data.put(StringUtils.join(measurement, ".", pKey), StringUtils.EMPTY);
+			}
+			
+			if(body.containsKey(qKey)){
+				try{
+					data.put(StringUtils.join(measurement, ".", qKey), body.get(qKey));
+				}catch(Exception e){
+				}
+			}else{
+				data.put(StringUtils.join(measurement, ".", qKey), StringUtils.EMPTY);
+			}
+		}
 		
 		try(StatefulRedisConnection<String, String> redisConnection = redisClient.connect()){
 			RedisCommands<String, String> redisCommands = redisConnection.sync();
@@ -294,10 +290,39 @@ import org.slf4j.LoggerFactory;
 	
 	public void line(Exchange exchange, @Headers Map<String, Object> headers, @Body Map<String, String> body){
 		String subject = (String)headers.get(NatsConstants.NATS_SUBJECT);
-		logger.debug("subject: {}, body: {}", subject, body);
+		long msec = (long)headers.get(NatsConstants.NATS_MESSAGE_TIMESTAMP);
+		logger.debug("subject: {}, body: {}, msec: {}", subject, body, msec);
+		
+		Number[] p = {null, null, null, null, null, null, null, null, null, null};
+		Number[] q = {null, null, null, null, null, null, null, null, null, null};
+		
+		for(int i = 0; i < 10; i++){
+			String pKey = String.format("%d.price", i);
+			String qKey = String.format("%d.quantity", i);
+			
+			if(body.containsKey(pKey)){
+				try{
+					p[i] = toNumber(body.get(pKey));
+				}catch(Exception e){
+				}
+			}else{
+				break;
+			}
+			
+			if(body.containsKey(qKey)){
+				try{
+					q[i] = toNumber(body.get(qKey));
+				}catch(Exception e){
+				}
+			}
+		}
+		
+		long sn = NumberUtils.toLong(body.get("synchronization_number"), 0);
+		
+		long nsec = (msec * 1_000_000) + (sn % 1_000_000_000);
 		
 		Point.Builder pointBuilder = Point.measurement(measurement)
-			.time((long)headers.get(FieldUtils.NSEC), TimeUnit.NANOSECONDS)
+			.time(nsec, TimeUnit.NANOSECONDS)
 			.tag(FieldUtils.COUNTRY, FieldUtils.country(headers))
 			.tag(FieldUtils.MARKET, FieldUtils.market(headers))
 			.tag(FieldUtils.INSTRUMENT, FieldUtils.instrument(headers))
@@ -305,7 +330,27 @@ import org.slf4j.LoggerFactory;
 			.tag(FieldUtils.COMMODITY, FieldUtils.commodity(headers))
 			.tag(FieldUtils.EXPIRATION, FieldUtils.expiration(headers))
 			.tag(FieldUtils.STRIKE, FieldUtils.strike(headers))
-			.addField(FieldUtils.NSEC, (long)headers.get(FieldUtils.NSEC))
+			.addField("nsec", nsec)
+			.addField("p0", p[0])
+			.addField("p1", p[1])
+			.addField("p2", p[2])
+			.addField("p3", p[3])
+			.addField("p4", p[4])
+			.addField("p5", p[5])
+			.addField("p6", p[6])
+			.addField("p7", p[7])
+			.addField("p8", p[8])
+			.addField("p9", p[9])
+			.addField("q0", q[0])
+			.addField("q1", q[1])
+			.addField("q2", q[2])
+			.addField("q3", q[3])
+			.addField("q4", q[4])
+			.addField("q5", q[5])
+			.addField("q6", q[6])
+			.addField("q7", q[7])
+			.addField("q8", q[8])
+			.addField("q9", q[9])
 		;
 		
 		influxdb.write(udpPort, pointBuilder.build());

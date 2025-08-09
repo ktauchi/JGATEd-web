@@ -138,9 +138,11 @@ import local.minkabu.jgate.mapper.JGATEMapper;
 		
 		long msec = (long)headers.get(NatsConstants.NATS_MESSAGE_TIMESTAMP);
 		
+		Map<String, String> map = new HashMap<String, String>(body);
+		
 		//Map<String, String> data = new HashMap<>(body);
 		// .(ドット)を含むキーを _(アンダースコア)でリプレース
-		Map<String, String> data = body.entrySet().stream().collect(Collectors.toMap(entry -> StringUtils.replaceChars(entry.getKey(), '.', '_'), entry -> entry.getValue()));
+		Map<String, String> data = map.entrySet().stream().collect(Collectors.toMap(entry -> StringUtils.replaceChars(entry.getKey(), '.', '_'), entry -> entry.getValue()));
 		
 		data.put(FieldUtils.MSEC, Long.toString(msec));
 		try{
