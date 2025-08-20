@@ -440,7 +440,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="seda:JGATE.BI41?queue=#JGATE.BI41-queue" />
-				<to uri="seda:JGATE.RVD?queue=#JGATE.RVD-queue" />
+				<!-- <to uri="seda:JGATE.RVD?queue=#JGATE.RVD-queue" /> -->
 			</multicast>
 		</route>
 		
@@ -455,7 +455,7 @@
 			<process ref="unpackProcessor" />
 			<multicast>
 				<to uri="seda:JGATE.IA42?queue=#JGATE.IA42-queue" />
-				<to uri="seda:JGATE.RVD?queue=#JGATE.RVD-queue" />
+				<!-- <to uri="seda:JGATE.RVD?queue=#JGATE.RVD-queue" /> -->
 			</multicast>
 		</route>
 		
@@ -480,7 +480,6 @@
 		</route>
 		
 		<!-- RVD -->
-		
 		<route id="seda-JGATE.RVD">
 			<from uri="seda:JGATE.RVD?queue=#JGATE.RVD-queue" />
 			<to uri="bean:rvd-service?method=publish" />
