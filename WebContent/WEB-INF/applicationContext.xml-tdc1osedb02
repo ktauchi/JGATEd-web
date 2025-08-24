@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util.xsd
+                           http://camel.apache.org/schema/spring
+                           http://camel.apache.org/schema/spring/camel-spring.xsd">
+	<!-- -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="properties">
+			<util:properties>
+				<prop key="mysql.url">jdbc:mysql://localhost/JGATE?autoReconnect=true&amp;autoReconnectForPools=true&amp;useUnicode=true&amp;characterEncoding=utf8</prop>
+				<prop key="mysql.username">jpx</prop>
+				<prop key="mysql.password"></prop>
+				
+				<prop key="redis.url">redis-socket:///var/local/redis/6379.sock</prop>
+				
+				<prop key="influxdb.url">http://127.0.0.1:62000</prop>
+				<prop key="influxdb.udpPort">62000</prop>
+				
+				<prop key="rvd.prefix">JGATE.OSE</prop>
+			</util:properties>
+		</property>
+	</bean>
+	
+	<bean id="lds" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+		<property name="url" value="${mysql.url}" />
+		<property name="username" value="${mysql.username}" />
+		<property name="password" value="${mysql.password}" />
+		<property name="validationQuery" value="SELECT 1" />
+	</bean>
+	
+	<bean id="jgateMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="local.minkabu.jgate.mapper.JGATEMapper" />
+		<property name="sqlSessionFactory">
+			<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+				<property name="dataSource" ref="lds" />
+				<property name="configLocation" value="classpath:/local/minkabu/jgate/mapper/mybatis-config.xml" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="unpackProcessor" class="local.minkabu.jgate.processor.UnpackProcessor">
+		<property name="camelContext" ref="camelContext" />
+	</bean>
+	
+	<bean id="tibrv" class="com.tibco.tibrv.Tibrv" init-method="open" destroy-method="close" scope="singleton">
+	</bean>
+	
+	<bean id="rvdTransport" class="com.tibco.tibrv.TibrvRvdTransport" depends-on="tibrv" destroy-method="destroy" scope="singleton">
+		<constructor-arg index="0" value="7900" />	<!-- service -->
+		<constructor-arg index="1" value="192.168.177.202" />	<!-- network -->
+		<constructor-arg index="2" value="tcp:7900" />	<!-- daemon -->
+		<!-- <constructor-arg index="3" value="/opt/tibco/tibrv/8.4/bin/tibrv.tkt" /> -->	<!-- ticket -->
+		<!--
+			see: catalina.out log file
+		-->
+	</bean>
+	
+	<import resource="JGATE.xml"/>
+	
+	<!--
+	-->
+	<camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring" messageHistory="false" autoStartup="true">
+		<!-- <package>local.minkabu.camel.component</package> -->
+		<!--
+		<packageScan>
+			<package>local.minkabu.camel.component</package>
+			<excludes>**.*Excluded*</excludes>
+			<includes>**.*</includes>
+		</packageScan>
+		-->
+		<!-- -->
+		<routeContextRef ref="JGATE-route" />
+		
+	</camelContext>
+</beans>
